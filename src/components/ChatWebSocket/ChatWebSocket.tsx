@@ -15,7 +15,6 @@ function ChatWebSocket() {
         console.log(text);
 
         setMensajes((prevMensajes) => [...prevMensajes, text]);
-
       });
     };
     newSocket.onclose = () => {
@@ -36,7 +35,6 @@ function ChatWebSocket() {
 
   const mandarMensaje = () => {
     if (socket && mensaje.trim()) {
-      // setMensajes((prevMensajes) => [...prevMensajes, mensaje]);
       socket.send(mensaje);
       setMensaje("");
     }

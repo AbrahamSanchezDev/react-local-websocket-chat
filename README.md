@@ -1,46 +1,102 @@
-# Getting Started with Create React App
+# 🚀 Abe React Learning — React WebSocket Chat
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**One-liner:** Minimal Create React App demonstrating a WebSocket-based chat UI component.
 
-## Available Scripts
+## 📌 Project Summary
+- **Objective:** Build a lightweight front-end demo that sends and receives messages over WebSocket and renders them in a simple chat UI.
+- **Context & Challenge:** The main challenge was keeping message flow and UI state minimal while handling streamed incoming data reliably (parsing binary/text frames and appending to state).
+- **Timeframe:** Prototype-level app (single-component focus; quick iteration).
 
-In the project directory, you can run:
+## ▶ Project Overview
+This repository contains a small React TypeScript app created with Create React App. The visible demo mounts a `ChatWebSocket` component that connects to a WebSocket server at `ws://localhost:8087`, sends user messages, and displays incoming messages in a simple scrollable list.
 
-### `npm start`
+## ✅ Key Features
+- Simple WebSocket client with lifecycle management
+- Message input with Enter-to-send and send icon
+- Minimal, responsive UI using CSS and `react-icons`
+- Typed React components with TypeScript
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## 🖼 Preview
+![Preview](Preview_1.png)
+- This project is intended to run locally; no hosted demo is provided.
+- To see the live chat you must run a WebSocket server at `ws://localhost:8087`.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## 📁 Project Structure
+- [package.json](package.json#L1-L200) — dependencies & scripts
+- [src/App.tsx](src/App.tsx#L1-L200) — App entry; mounts the chat component
+- [src/components/ChatWebSocket/ChatWebSocket.tsx](src/components/ChatWebSocket/ChatWebSocket.tsx#L1-L200) — WebSocket chat UI & logic
+- [public/manifest.json](public/manifest.json#L1-L200) — PWA metadata and icons
 
-### `npm test`
+## 🏛 Architecture Highlights
+- Event-driven UI: WebSocket events update React state.
+- Component-based: `ChatWebSocket` encapsulates connection and render logic.
+- Simple observer-style message handling: incoming frames appended to local state for rendering.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠 Technology Stack
+- React: Component-driven UI and state management.
+- TypeScript: Static types for safer component contracts.
+- WebSocket API: Real-time bidirectional messaging.
+- Create React App: Tooling, build and dev server.
+- react-icons: Lightweight iconography for UI affordances.
 
-### `npm run build`
+## 🧩 Code Snippet — WebSocket setup
+```typescript
+useEffect(() => {
+	const newSocket = new WebSocket("ws://localhost:8087");
+	newSocket.onmessage = (event) => {
+		event.data.text().then((text: string) => {
+			setMensajes((prev) => [...prev, text]);
+		});
+	};
+	newSocket.onclose = () => console.log("disconnected");
+	setSocket(newSocket);
+}, []);
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ⚙ Code Quality & Engineering Practices
+- TypeScript with explicit types for states and WebSocket references.
+- Single-responsibility component: `ChatWebSocket` manages connection and rendering.
+- Minimal external dependencies to keep surface area small and maintainable.
+- Clear separation of UI (CSS) and logic (component hooks).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ▶ How to build & run locally
+1. Install dependencies:
+```bash
+npm install
+```
+2. Start the React dev server:
+```bash
+npm start
+```
+3. Build for production:
+```bash
+npm run build
+```
+4. WebSocket server: this project expects a server at `ws://localhost:8087`. A minimal Node server (example) can be run separately.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🛠 Minimal example WebSocket server (Node)
+```js
+// run with: node ws-server.js
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8087 });
+wss.on('connection', (ws) => {
+	ws.on('message', (msg) => {
+		// echo to all
+		wss.clients.forEach(c => c.readyState === WebSocket.OPEN && c.send(msg));
+	});
+});
+```
 
-### `npm run eject`
+## 🧭 Development insights / timeline
+- Focused on fast iteration of a single feature: chat via WebSocket.
+- Clean TypeScript integration to ensure easy extension for message parsing or richer UI.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## 🎓 Learning Outcomes
+- Demonstrated practical WebSocket integration in a React + TypeScript app.
+- Practiced component isolation and event-driven UI updates.
+- Prepared code for incremental features (reconnect logic, message metadata).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## ✉️ Author / Contact
+- Local project: `abe-react-learning` (workspace)
+- No public repository URL provided.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

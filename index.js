@@ -1,4 +1,4 @@
-//este es un server
+//este es un server y se ejecuta con node index.js
 const webSocket = require("ws");
 
 const ws = new webSocket.Server({ port: 8087 });
